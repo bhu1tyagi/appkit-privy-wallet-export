@@ -10,14 +10,8 @@ export default function WalletExport() {
   const { exportWallet: exportSolanaWallet } = useSolanaWallets();
   const [isExporting, setIsExporting] = useState(false);
 
-  // Check that user is authenticated
   const isAuthenticated = ready && authenticated;
 
-  // Debug: Log user and linked accounts to console
-  console.log('User object:', user);
-  console.log('Linked accounts:', user?.linkedAccounts);
-
-  // Find embedded Solana wallet
   const embeddedSolanaWallet = user?.linkedAccounts.find(
     (account) => 
       account.type === 'wallet' && 
@@ -26,20 +20,6 @@ export default function WalletExport() {
   );
 
   const hasEmbeddedWallet = !!embeddedSolanaWallet;
-
-  console.log('Solana Wallet found:', embeddedSolanaWallet);
-  console.log('Has embedded wallet:', hasEmbeddedWallet);
-
-  // Additional debug: log all wallet accounts with their properties
-  const walletAccounts = user?.linkedAccounts.filter(account => account.type === 'wallet');
-  console.log('All wallet accounts with properties:', walletAccounts?.map(account => ({
-    type: account.type,
-    chainType: account.chainType,
-    walletClientType: account.walletClientType,
-    address: (account as any).address,
-    imported: (account as any).imported,
-    delegated: (account as any).delegated
-  })));
 
   const handleExportWallet = async () => {
     if (!hasEmbeddedWallet) {
@@ -54,7 +34,7 @@ export default function WalletExport() {
       console.log('Export result:', result);
     } catch (error) {
       console.error('Error exporting wallet:', error);
-      alert(`Failed to export wallet: ${error instanceof Error ? error.message : 'Unknown error'}. Please make sure you have a valid embedded Solana wallet.`);
+      alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsExporting(false);
     }
@@ -62,111 +42,76 @@ export default function WalletExport() {
 
   if (!isAuthenticated) {
     return (
-      <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-        <Wallet className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Solana Wallet Export</h3>
-        <p className="text-gray-600">Please log in to access Solana wallet export functionality.</p>
+      <div className="border-2 border-dashed rounded-lg p-6 sm:p-8 text-center" style={{ borderColor: 'rgba(255, 255, 255, 0.1)', backgroundColor: '#0D1F2C' }}>
+        <Wallet className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-3" style={{ color: '#B7B7B7' }} />
+        <h3 className="text-base sm:text-lg font-medium mb-2" style={{ color: '#FFFFFF', fontFamily: 'Inter', fontWeight: 600 }}>Export Wallet</h3>
+        <p className="text-sm sm:text-base" style={{ color: '#ADADAD', fontFamily: 'Inter' }}>Sign in to export your private keys</p>
       </div>
     );
   }
 
   if (!hasEmbeddedWallet) {
     return (
-      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
-        <div className="text-center mb-4">
-          <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-3" />
-          <h3 className="text-lg font-medium text-yellow-800 mb-2">No Embedded Solana Wallet Found</h3>
-          <p className="text-yellow-700 mb-4">
-            You need to have an embedded Solana wallet to export private keys. 
-            Embedded wallets are automatically created when you sign up with email or social login.
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-lg p-4 text-sm">
-          <h4 className="font-medium text-gray-900 mb-2">Debug Information:</h4>
-          <div className="space-y-2 text-gray-700">
-            <p><strong>User ID:</strong> {user?.id || 'Not found'}</p>
-            <p><strong>Linked Accounts:</strong> {user?.linkedAccounts?.length || 0}</p>
-            <div className="mt-2">
-              <strong>Account Types:</strong>
-              <ul className="list-disc list-inside ml-2 text-xs">
-                {user?.linkedAccounts?.map((account, index) => (
-                  <li key={index}>
-                    {account.type} 
-                    {account.type === 'wallet' && ` (client: ${account.walletClientType || 'undefined'}, chain: ${account.chainType})`}
-                    {account.type === 'email' && ` (${(account as any).address})`}
-                  </li>
-                )) || <li>No accounts found</li>}
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-4 text-center">
-          <p className="text-sm text-yellow-700">
-            If you just signed up, try refreshing the page or logging out and back in.
+      <div className="border rounded-lg p-4 sm:p-6" style={{ backgroundColor: 'rgba(137, 234, 246, 0.05)', borderColor: '#89EAF6' }}>
+        <div className="text-center">
+          <AlertTriangle className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-3" style={{ color: '#89EAF6' }} />
+          <h3 className="text-base sm:text-lg font-medium mb-2" style={{ color: '#FFFFFF', fontFamily: 'Inter', fontWeight: 600 }}>No Wallet Found</h3>
+          <p className="text-sm sm:text-base mb-3" style={{ color: '#ADADAD', fontFamily: 'Inter' }}>
+            No embedded wallet detected. Try signing out and back in.
           </p>
         </div>
       </div>
     );
   }
 
-  // Get wallet address safely
   const walletAddress = (embeddedSolanaWallet as any)?.address;
-  const displayAddress = walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : 'Loading...';
+  const displayAddress = walletAddress ? `${walletAddress.slice(0, 8)}...${walletAddress.slice(-6)}` : 'Loading...';
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-        <Download className="h-5 w-5" />
-        Export Solana Private Key
-      </h3>
+    <div className="rounded-lg border p-4 sm:p-6 space-y-4 sm:space-y-6" style={{ backgroundColor: '#0D1F2C', borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <Download className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: '#3AC1E1' }} />
+        <h3 className="text-base sm:text-lg font-medium" style={{ color: '#FFFFFF', fontFamily: 'Inter', fontWeight: 600 }}>Export Private Key</h3>
+      </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-800">
-            <p className="font-medium mb-1">Important Security Information</p>
-            <ul className="space-y-1 text-xs">
-              <li>• Your private key gives full control over your Solana wallet</li>
-              <li>• Never share your private key with anyone</li>
-              <li>• Store it securely and keep it offline</li>
-              <li>• This action cannot be undone</li>
-            </ul>
+      <div className="border rounded-lg p-3 sm:p-4" style={{ backgroundColor: 'rgba(58, 193, 225, 0.05)', borderColor: 'rgba(58, 193, 225, 0.2)' }}>
+        <div className="flex items-start gap-2 sm:gap-3">
+          <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 mt-0.5 flex-shrink-0" style={{ color: '#3AC1E1' }} />
+          <div className="text-sm sm:text-base" style={{ color: '#FFFFFF', fontFamily: 'Inter' }}>
+            <p className="font-medium">Security Warning</p>
+            <p className="text-xs sm:text-sm mt-1" style={{ color: '#ADADAD', fontFamily: 'Inter' }}>Never share your private key with anyone</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-        <div className="text-sm text-green-800">
-          <p className="font-medium">✓ Embedded Solana Wallet Detected</p>
-          <p className="text-xs mt-1">
-            Address: {displayAddress}
+      <div className="border rounded-lg p-3 sm:p-4" style={{ backgroundColor: 'rgba(39, 94, 117, 0.2)', borderColor: '#275E75' }}>
+        <div className="text-sm sm:text-base" style={{ color: '#FFFFFF', fontFamily: 'Inter' }}>
+          <p className="font-medium">✓ Wallet Detected</p>
+          <p className="text-xs sm:text-sm mt-1 font-mono break-all" style={{ color: '#89EAF6', fontFamily: 'monospace' }}>
+            {displayAddress}
           </p>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <p className="text-sm text-gray-600">
-          Click the button below to export your embedded Solana wallet&apos;s private key. 
-          This will open a secure modal where you can copy your private key.
-        </p>
+      <button
+        onClick={handleExportWallet}
+        disabled={isExporting}
+        className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 px-4 sm:px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base touch-manipulation"
+        style={{
+          backgroundColor: '#3AC1E1',
+          color: '#0c101a',
+          fontFamily: 'Inter',
+          fontWeight: 600,
+          minHeight: '44px'
+        }}
+      >
+        <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+        <span>{isExporting ? 'Exporting...' : 'Export Private Key'}</span>
+      </button>
 
-        <button
-          onClick={handleExportWallet}
-          disabled={isExporting}
-          className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-        >
-          <Download className="h-4 w-4" />
-          {isExporting ? 'Exporting...' : 'Export Solana Private Key'}
-        </button>
-
-        <div className="text-xs text-gray-500 space-y-1">
-          <p>• For Solana wallets: You&apos;ll get the private key only</p>
-          <p>• Compatible with Phantom, Solflare, and other Solana wallets</p>
-          <p>• Note: Seed phrase export is not supported for Solana wallets</p>
-          <p>• The export happens on a separate secure domain</p>
-        </div>
+      <div className="text-xs sm:text-sm space-y-1 sm:space-y-2" style={{ color: '#B7B7B7', fontFamily: 'Inter' }}>
+        <p>• Compatible with Phantom, Solflare, and other Solana wallets</p>
+        <p>• Export opens in a secure modal window</p>
       </div>
     </div>
   );

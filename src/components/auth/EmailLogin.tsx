@@ -38,24 +38,25 @@ export default function EmailLogin() {
   const isAwaitingCode = state.status === 'awaiting-code-input';
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-        <Mail className="h-5 w-5" />
-        Email Login
-      </h3>
-      
-      <div className="space-y-3">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="space-y-3 sm:space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
           <input
-            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Email address"
+            className="w-full px-4 sm:px-5 py-3 sm:py-4 rounded-lg focus:outline-none focus:ring-2 transition-colors text-sm sm:text-base touch-manipulation"
+            style={{ 
+              backgroundColor: '#14303E',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#FFFFFF',
+              fontFamily: 'Inter',
+              fontWeight: 400,
+              minHeight: '44px'
+            }}
+            onFocus={(e) => e.target.style.borderColor = '#3AC1E1'}
+            onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
             disabled={isAwaitingCode}
           />
         </div>
@@ -64,44 +65,58 @@ export default function EmailLogin() {
           <button
             onClick={handleSendCode}
             disabled={!email || isLoading}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 px-4 sm:px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base font-medium touch-manipulation"
+            style={{
+              backgroundColor: '#3AC1E1',
+              color: '#0c101a',
+              fontFamily: 'Inter',
+              fontWeight: 600,
+              minHeight: '44px'
+            }}
           >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : null}
-            Send Verification Code
+            {isLoading && <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />}
+            <span>Send Code</span>
           </button>
         ) : (
-          <div className="space-y-3">
-            <div>
-              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
-                Verification Code
-              </label>
-              <input
-                id="code"
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Enter verification code"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+          <div className="space-y-3 sm:space-y-4">
+            <input
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Verification code"
+              className="w-full px-4 sm:px-5 py-3 sm:py-4 rounded-lg focus:outline-none focus:ring-2 transition-colors text-sm sm:text-base touch-manipulation"
+              style={{ 
+                backgroundColor: '#14303E',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#FFFFFF',
+                fontFamily: 'Inter',
+                fontWeight: 400,
+                minHeight: '44px'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#3AC1E1'}
+              onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+            />
             <button
               onClick={handleLogin}
               disabled={!code || isLoading}
-              className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 sm:py-4 px-4 sm:px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base font-medium touch-manipulation"
+              style={{
+                backgroundColor: '#275E75',
+                color: '#FFFFFF',
+                fontFamily: 'Inter',
+                fontWeight: 600,
+                minHeight: '44px'
+              }}
             >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : null}
-              Verify & Login
+              {isLoading && <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />}
+              <span>Verify & Sign In</span>
             </button>
           </div>
         )}
 
         {state.status === 'error' && state.error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 text-sm">{state.error.message}</p>
+          <div className="p-3 sm:p-4 rounded-lg border" style={{ backgroundColor: 'rgba(137, 234, 246, 0.1)', borderColor: '#89EAF6' }}>
+            <p className="text-sm" style={{ color: '#89EAF6', fontFamily: 'Inter' }}>{state.error.message}</p>
           </div>
         )}
       </div>
