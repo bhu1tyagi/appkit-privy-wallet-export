@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import UserProfile from '@/components/user/UserProfile';
 import WalletExport from '@/components/wallet/WalletExport';
+import COLORS from '@/assets/colors';
 
 export default function DashboardPage() {
   const { ready, authenticated } = usePrivy();
@@ -18,10 +19,10 @@ export default function DashboardPage() {
 
   if (!ready) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6" style={{ backgroundColor: '#0c101a' }}>
+      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6" style={{ backgroundColor: COLORS.backgroundHomeScreen }}>
         <div className="text-center">
-          <div className="animate-spin w-5 h-5 border-4 border-t-transparent rounded-full mx-auto mb-2" style={{ borderColor: '#3AC1E1', borderTopColor: 'transparent' }}></div>
-          <p className="text-sm" style={{ color: '#ADADAD', fontFamily: 'Inter', fontSize: '13px' }}>Loading...</p>
+          <div className="animate-spin w-5 h-5 border-4 border-t-transparent rounded-full mx-auto mb-2" style={{ borderColor: COLORS.brandPrimary, borderTopColor: 'transparent' }}></div>
+          <p className="text-sm" style={{ color: COLORS.textHint, fontFamily: 'Inter', fontSize: '13px' }}>Loading...</p>
         </div>
       </div>
     );
@@ -29,24 +30,24 @@ export default function DashboardPage() {
 
   if (!authenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6" style={{ backgroundColor: '#0c101a' }}>
+      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6" style={{ backgroundColor: COLORS.backgroundHomeScreen }}>
         <div className="text-center">
-          <div className="animate-spin w-5 h-5 border-4 border-t-transparent rounded-full mx-auto mb-2" style={{ borderColor: '#3AC1E1', borderTopColor: 'transparent' }}></div>
-          <p className="text-sm" style={{ color: '#ADADAD', fontFamily: 'Inter', fontSize: '13px' }}>Redirecting...</p>
+          <div className="animate-spin w-5 h-5 border-4 border-t-transparent rounded-full mx-auto mb-2" style={{ borderColor: COLORS.brandPrimary, borderTopColor: 'transparent' }}></div>
+          <p className="text-sm" style={{ color: COLORS.textHint, fontFamily: 'Inter', fontSize: '13px' }}>Redirecting...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#0c101a' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: COLORS.backgroundHomeScreen }}>
       {/* Header */}
       <div className="flex-shrink-0 px-4 sm:px-6 pt-6 sm:pt-8 pb-4 sm:pb-6 safe-area-top">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-lg sm:text-xl font-semibold" style={{ color: '#FFFFFF', fontFamily: 'Inter', fontWeight: 600 }}>
+          <h1 className="text-lg sm:text-xl font-semibold" style={{ color: COLORS.white, fontFamily: 'Inter', fontWeight: 600 }}>
             Wallet Export
           </h1>
-          <p className="text-xs sm:text-sm mt-1" style={{ color: '#ADADAD', fontFamily: 'Inter' }}>
+          <p className="text-xs sm:text-sm mt-1" style={{ color: COLORS.textHint, fontFamily: 'Inter' }}>
             Manage your wallet keys securely
           </p>
         </div>

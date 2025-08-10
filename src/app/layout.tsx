@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/providers/PrivyProvider";
+import COLORS from "@/assets/colors";
 
 export const metadata: Metadata = {
   title: "Export Wallet",
@@ -25,7 +26,7 @@ export default function RootLayout({
       </head>
       <body className="font-inter antialiased" style={{ 
         fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-        backgroundColor: '#0c101a',
+        backgroundColor: COLORS.backgroundHomeScreen,
         margin: 0,
         padding: 0,
         minHeight: '100vh',
